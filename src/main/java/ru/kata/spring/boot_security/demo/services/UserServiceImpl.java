@@ -10,7 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserServices {
@@ -40,7 +43,8 @@ public class UserServiceImpl implements UserServices {
 
     @Override
     public User showUser(Long id) {
-        return userRepository.findById(id).get();
+        return userRepository.findById(id).orElseThrow(()
+                -> new NoSuchElementException("Пользователь с таким ID не найден"));
     }
 
     @Override
@@ -52,8 +56,8 @@ public class UserServiceImpl implements UserServices {
     }
 
     @Override
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public Set<User> getAllUsers() {
+        return new LinkedHashSet<>(userRepository.findAll());
     }
 
 
@@ -66,18 +70,14 @@ public class UserServiceImpl implements UserServices {
 
     @Override
     public User findUserById(Long id) {
-        if (userRepository.findById(id).isEmpty()) {
-            throw new UsernameNotFoundException("Пользователь с таким ID не найден");
-        }
-        return userRepository.findById(id).get();
+        return userRepository.findById(id).orElseThrow(()
+                -> new NoSuchElementException("Пользователь с таким ID не найден"));
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = findByUsername(username);
-        if (user == null) {
-            throw new UsernameNotFoundException("Пользователь не существует");
-        }
-        return user;
+        Optional<User> userOptional = Optional.ofNullable(findByUsername(username));
+        return userOptional.orElseThrow(()
+                -> new UsernameNotFoundException("Пользователь не существует"));
     }
 }

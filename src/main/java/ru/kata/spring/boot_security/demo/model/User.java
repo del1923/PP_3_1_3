@@ -7,6 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -49,13 +50,13 @@ public class User implements UserDetails {
     @JoinTable(name = "users_roles"
             , joinColumns = @JoinColumn(name = "users_id")
             , inverseJoinColumns = @JoinColumn(name = "roles_id"))
-    private List<Role> roles;
+    private Set<Role> roles;
 
     public User() {
     }
 
     public User(Long id, String username, String password, String name, String surName,
-                int age, String email, List<Role> roles) {
+                int age, String email, Set<Role> roles) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -123,11 +124,11 @@ public class User implements UserDetails {
         this.email = email;
     }
 
-    public List<Role> getRoles() {
+    public Set<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<Role> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 
