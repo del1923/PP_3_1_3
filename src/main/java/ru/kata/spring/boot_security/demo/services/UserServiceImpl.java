@@ -2,8 +2,6 @@ package ru.kata.spring.boot_security.demo.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,12 +70,5 @@ public class UserServiceImpl implements UserServices {
     public User findUserById(Long id) {
         return userRepository.findById(id).orElseThrow(()
                 -> new NoSuchElementException("Пользователь с таким ID не найден"));
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> userOptional = Optional.ofNullable(findByUsername(username));
-        return userOptional.orElseThrow(()
-                -> new UsernameNotFoundException("Пользователь не существует"));
     }
 }

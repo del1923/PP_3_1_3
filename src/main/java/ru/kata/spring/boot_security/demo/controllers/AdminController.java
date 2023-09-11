@@ -22,8 +22,14 @@ public class AdminController {
         this.userServices = userServices;
         this.roleServices = roleServices;
     }
+//    @GetMapping
+//    public String admin (Model model) {
+//        model.addAttribute("showAllUsers", userServices.getAllUsers());
+//        model.addAttribute("user", userServices.findByUsername(principal.getName()));
+//        return "admin";
+//    }
 
-    @GetMapping("/")
+    @GetMapping()
     public String allUsers(Model model, Principal principal) {
         model.addAttribute("showAllUsers", userServices.getAllUsers());
         model.addAttribute("user", userServices.findByUsername(principal.getName()));
