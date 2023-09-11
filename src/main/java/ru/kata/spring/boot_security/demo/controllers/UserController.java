@@ -24,6 +24,4 @@ public class UserController {
         model.addAttribute("user", userServices.findByUsername(principal.getName()));
         return "/showUser";
     }
-
-
 }

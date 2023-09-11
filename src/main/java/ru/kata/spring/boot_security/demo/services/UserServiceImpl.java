@@ -5,12 +5,13 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -61,9 +62,23 @@ public class UserServiceImpl implements UserServices {
 
     @Override
     @Transactional
-    public void updateUser(User user) {
-        userRepository.save(user);
+    public void updateUser(User userUpdate, Long id) {
+        userRepository.findById(id).get().setUsername(userUpdate.getUsername());
+        userRepository.findById(id).get().setName(userUpdate.getName());
+        userRepository.findById(id).get().setSurName(userUpdate.getSurName());
+        userRepository.findById(id).get().setAge(userUpdate.getAge());
+        userRepository.findById(id).get().setEmail(userUpdate.getEmail());
+        userRepository.findById(id).get().setRoles((Set<Role>) userUpdate.getAuthorities());
+
+        if (userRepository.findById(id).get().getPassword().equals(userUpdate.getPassword())) {
+            userRepository.save(userRepository.findById(id).get());
+        } else {
+            userRepository.findById(id).get().setPassword(passwordEncoder.encode(userUpdate.getPassword()));
+            userRepository.save(userRepository.findById(id).get());
+        }
+        userRepository.save(userRepository.findById(id).get());
     }
+
 
 
     @Override

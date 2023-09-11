@@ -22,7 +22,7 @@ public class User implements UserDetails {
     private String username;
 
     @Column(name = "password")
-    @Size(min = 4, max = 9, message = "4...9 символов")
+    //@Size(min = 3, max = 9, message = "4...9 символов")
     private String password;
 
     @NotEmpty(message = "Не пустое")
