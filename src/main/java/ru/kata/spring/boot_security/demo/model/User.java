@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.sql.ConnectionBuilder;
 import java.util.Collection;
 import java.util.Set;
 
@@ -17,7 +18,7 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotEmpty(message = "Не пустое")
+    //@NotEmpty(message = "Не пустое")
     @Column(name = "username") //Имя юзера должно быть уникальным
     private String username;
 
@@ -54,16 +55,18 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(Long id, String username, String password, String name, String surName,
+    public User( String username, String password, String name, String surName,
                 int age, String email, Set<Role> roles) {
-        this.id = id;
+        //this.id = id;
         this.username = username;
         this.password = password;
         this.name = name;
         this.surName = surName;
         this.age = age;
         this.email = email;
+        this.roles = roles;
     }
+
 
     public Long getId() {
         return id;
@@ -169,4 +172,5 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }

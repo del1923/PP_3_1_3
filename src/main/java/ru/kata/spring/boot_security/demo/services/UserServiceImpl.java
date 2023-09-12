@@ -63,12 +63,7 @@ public class UserServiceImpl implements UserServices {
     @Override
     @Transactional
     public void updateUser(User userUpdate, Long id) {
-        userRepository.findById(id).get().setUsername(userUpdate.getUsername());
-        userRepository.findById(id).get().setName(userUpdate.getName());
-        userRepository.findById(id).get().setSurName(userUpdate.getSurName());
-        userRepository.findById(id).get().setAge(userUpdate.getAge());
-        userRepository.findById(id).get().setEmail(userUpdate.getEmail());
-        userRepository.findById(id).get().setRoles((Set<Role>) userUpdate.getAuthorities());
+        userRepository.save(userUpdate);
 
         if (userRepository.findById(id).get().getPassword().equals(userUpdate.getPassword())) {
             userRepository.save(userRepository.findById(id).get());
@@ -80,10 +75,15 @@ public class UserServiceImpl implements UserServices {
     }
 
 
-
     @Override
     public User findUserById(Long id) {
         return userRepository.findById(id).orElseThrow(()
                 -> new NoSuchElementException("Пользователь с таким ID не найден"));
+    }
+
+    @Override
+    @Transactional
+    public void createUser(User user) {
+        userRepository.save( user );
     }
 }

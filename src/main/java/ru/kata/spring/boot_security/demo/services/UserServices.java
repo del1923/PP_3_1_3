@@ -18,4 +18,5 @@ public interface UserServices {
     void updateUser(User user, Long id);
 
     User findUserById(Long id);
+    void createUser( User user );
 }

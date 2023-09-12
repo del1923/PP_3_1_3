@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
-import ru.kata.spring.boot_security.demo.repositories.UserRepository;
+import ru.kata.spring.boot_security.demo.services.UserServices;
 
 import java.util.*;
 
@@ -16,14 +16,15 @@ import java.util.*;
 public class Initializer implements ApplicationListener<ContextRefreshedEvent> {
 
     private RoleRepository roleRepository;
-    private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
+    private UserServices userServices;
 
     @Autowired
-    public Initializer(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
+    public Initializer( RoleRepository roleRepository, PasswordEncoder passwordEncoder,
+                        UserServices userServices) {
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.userServices = userServices;
     }
 
     @Override
@@ -50,39 +51,16 @@ public class Initializer implements ApplicationListener<ContextRefreshedEvent> {
         Set<Role> adminRoles = new LinkedHashSet<>();
         Collections.addAll(adminRoles, adminRole, userRole, guestRole);
 
-        User guest = new User();
-        guest.setUsername("guest");
-        guest.setPassword(passwordEncoder.encode("guest"));
-        guest.setName("guest");
-        guest.setSurName("guest");
-        guest.setAge(20);
-        guest.setEmail("guest@mail.ru");
-        guest.setRoles(guestRoles);
-        userRepository.save(guest);
+        User guest = new User( "guest", passwordEncoder.encode("guest"), "guest",
+                "guest", 20, "guest@mail.ru", guestRoles );
+        userServices.createUser( guest );
 
-        User user = new User();
-        user.setUsername("user");
-        user.setPassword(passwordEncoder.encode("user"));
-        user.setName("user");
-        user.setSurName("user");
-        user.setAge(25);
-        user.setEmail("user@mail.ru");
-        user.setRoles(userRoles);
-        userRepository.save(user);
+        User user = new User( "user", passwordEncoder.encode("user"), "user",
+                "guest",30, "user@mail.ru", userRoles );
+        userServices.createUser( user );
 
-        User admin = new User();
-        admin.setUsername("admin");
-        admin.setPassword(passwordEncoder.encode("admin"));
-        admin.setName("admin");
-        admin.setSurName("admin");
-        admin.setAge(30);
-        admin.setEmail("admin@mail.ru");
-        admin.setRoles(adminRoles);
-        userRepository.save(admin);
-
-
-
+        User admin = new User( "admin", passwordEncoder.encode("admin"), "admin",
+                "admin",40, "admin@mail.ru", adminRoles );
+        userServices.createUser( admin );
     }
-
-
 }
